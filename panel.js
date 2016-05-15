@@ -1,0 +1,1 @@
+// panel to pull and display information from server
