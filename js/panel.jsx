@@ -17,18 +17,46 @@ other flages
 
 */
 
-var TestComponent= React.createClass({
+var socket= new io.Socket();
+
+
+var NewItemComponent=React.createClass({
+	handleKeyPress: function(e){
+		// add data to DB
+	}
+
 	render:function(){
 		return(
 			<div>
-				Hello fuckheads!
+				<form className="new_item">
+					<input type="text"/>
+					<textarea></textarea>
+				</form>
+			</div>
+		)
+	}
+});
+
+var ItemBarComponent= React.createClass({
+	handleClick: function(event){
+
+		ReactDOM.render(
+			<NewItemComponent />,
+			document.getElementById('mainDiv')
+			);
+	},
+
+	render:function(){
+		return(
+			<div>
+				<input type="text" onClick={this.handleClick} value="create an item"/>
 			</div>
 		)
 	}
 });
 
 ReactDOM.render(
-	<TestComponent />,
+	<ItemBarComponent />,
 	document.getElementById('mainDiv')
 	);
 
@@ -46,3 +74,14 @@ ReactDOM.render(
   <HelloWorld />,
   document.getElementById('app')
 );
+
+
+
+
+/*THINGS TO LOOK UP
+
+-nested classes?
+
+
+
+*/

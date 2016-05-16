@@ -1,0 +1,7 @@
+/*Personal assistant main style sheet*/
+
+.new_item{
+	width:60%;
+	display: block;
+	z-index:-1;
+}
