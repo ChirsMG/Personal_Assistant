@@ -1,0 +1,30 @@
+#Data Types
+
+card:
+	title,
+	description
+
+note extends card:
+	data= description.xml
+
+item extends card:
+	date_added,
+	category,
+	*data
+
+event extends card:
+	date,
+	location,
+	references[]
+
+task extends item:
+	size,
+	status,
+	dependencies[],
+	references[],
+	date_due
+
+recurring_task extends task:
+	frequency
+
+
