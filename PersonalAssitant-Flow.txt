@@ -1,0 +1,38 @@
+# Personal assistant design flow
+
+Start:
+-connect
+-login
+	Client:
+		- input pass
+		- hash pass	
+		- send hashed pass and user info
+	Server:
+		- recieve login info
+		- compare hashes
+		- send auth confirmation
+CLient:
+	- recieve auth confirmation
+	- push saved changes
+	- goto loop:
+
+Loop:
+
+	client:
+		- check connction reconnect if necessary
+		- send data request
+	Server:
+		send data upon request
+	
+	client:
+		-recieve data
+		- cache local changes
+		- wait 30 seonds
+		- push changes
+		gotto loop:
+
+onClose:
+	push changes if connected
+	else: save local changes to be updated on startup
+
+
