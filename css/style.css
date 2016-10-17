@@ -1,25 +1,58 @@
 /*Personal assistant main style sheet*/
 
 .new_item{
-	width:60%;
+	margin:auto;
 	display: block;
 	z-index:-1;
 }
 
 .title_input{
-	width:200px;
-	margin:5px;
+	width:80ex;
+	margin:auto;
+	padding:8px;
+	display: block;
 }
 
 .content_input{
-	width:400px;
-	margin:10px;
+	width:80ex;
+	margin:auto;
+	margin-top:5px;
+	min-height: 8em;
+	max-height: 25em;
 	resize:none;
+	display: block;
 }
 
 .item_input{
 	margin:auto;
 	min-width: 300px;
-	width: 33%;
 
+}
+
+/* Card and Gallery info */
+.Card_display{
+	margin-top:25px; 
+}
+
+.Card{ padding: 5px;
+	background-color: gray;
+	min-width: 30ex;
+	width: 15%;
+	min-height: 15em;
+	display:inline-block;
+	margin: 10px;
+	vertical-align: top;
+}
+
+.item_title{
+	display: block;
+	max-width: 25ex;
+	font-weight: 600;
+	font-size: 18;
+	margin:auto;
+}
+
+.item_description{
+	margin:2px;
+	padding:4px;
 }

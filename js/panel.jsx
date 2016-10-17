@@ -29,29 +29,29 @@ var socket;
 
 
 //var socket = io.connect('104.131.42.153');
-if(socket = io.connect('10.0.0.183:30')){
-	console.log('connect')
-}
+//if(socket = io.connect('10.0.0.183:30')){
+//	console.log('connect')
+//}
 
-socket.on("connect",function(){
-	console.log("client connect")
-})
+// socket.on("connect",function(){
+// 	console.log("client connect")
+// })
 
-socket.on("error",function(){
-	console.log("ERROR")
-})
+// socket.on("error",function(){
+// 	console.log("ERROR")
+// })
 
-socket.on("init",function(){
-	console.log("logging in");
-	socket.emit("login",{username:"MASTER", pwd:"TEMPLOGIN"});
-})
+// socket.on("init",function(){
+// 	console.log("logging in");
+// 	socket.emit("login",{username:"MASTER", pwd:"TEMPLOGIN"});
+// })
 
-socket.on("login_accept",function(){
-	console.log('login confirmed')
-})
+// socket.on("login_accept",function(){
+// 	console.log('login confirmed')
+// })
 
 
-socket.emit("info",{});
+// socket.emit("info",{});
 
 document.body.addEventListener("unload",Unload);
 
@@ -73,9 +73,9 @@ var Bar=(
 	      </Navbar.Brand>
 	    </Navbar.Header>
 	    <Nav>
-	      <NavItem eventKey={1} href="#">[symbol for view type 1]</NavItem>
-	      <NavItem eventKey={2} href="#">[symbol for view type 2]</NavItem>
-	      <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+	      <NavItem eventKey={1} href="#">[symbol for preferences]</NavItem>
+	      <NavItem eventKey={2} href="#">[symbol for alt view]</NavItem>
+	      <NavDropdown eventKey={3} title="Menu" id="basic-nav-dropdown">
 	        <MenuItem eventKey={3.1}>Action</MenuItem>
 	        <MenuItem eventKey={3.2}>Another action</MenuItem>
 	        <MenuItem eventKey={3.3}>Something else here</MenuItem>
@@ -88,42 +88,35 @@ var Bar=(
 	)
 
 
-var NewItemComponent=React.createClass({
-	handleKeyPress: function(e){
-		// add data to DB
-	},
 
+
+var ItemBarComponent= React.createClass({
+	getInitialState:function(){
+		return({
+			show:false
+		})
+	},
+	handleClick:function(event){
+		this.setState({show:true})
+	},
 	render:function(){
-		return(
+		if( this.state.show){
+			return(
 			<div className="item_input">
 				<form className="new_item">
 					<input className="title_input" type="text"/>
 					<textarea className="content_input"></textarea>
 				</form>
 			</div>
-		)
-	}
-});
-
-var ItemBarComponent= React.createClass({
-	getIntitalState:function(){
-		return({
-			show:false,
-		})
-	},
-	handleClick:function(event){
-		ReactDOM.render(
-			<NewItemComponent />,
-			document.getElementById('mainDiv')
-			);
-	},
-
-	render:function(){
-		return(
-			<div>
-				<input type="text" className="title_input" onClick={this.handleClick} value="create an item"/>
-			</div>
-		)
+		
+			)
+		}else{
+			return(
+				<div>
+					<input type="text" className="title_input" onClick={this.handleClick.bind(this)} value="create an item"/>
+				</div>
+				)
+		}
 	}
 });
 
@@ -158,18 +151,56 @@ ReactDOM.render(
 	document.getElementById('mainDiv')
 	);
 
-var HelloWorld = React.createClass({
-  	render: function() {
-	    return (
-	      <div>
-	        Hello World!
-	      </div>
-		)
+
+
+var Item_Card=React.createClass({
+	getInitialstate:function(){
+		return(
+			data:{}
+			)
+	},
+	render:function(){
+		return(
+			<div className="Card">
+				<div className="item_title">{this.props.data.title}</div>
+				<div className="item_description">{this.props.data.description}</div>
+				<div className="item_list">
+					<ul>
+					{this.props.data.list.map(function(item){
+						return(
+							<li>{item}</li>
+							)
+					})}
+					</ul>
+				</div>
+			</div>
+			)
+
 	}
 });
+
+var Cards=React.createClass({
+	getInitialstate:function(){
+		return(
+		{
+				
+		})
+	},
+	render:function(){
+		return(
+				<div className="Card_display">
+				{
+					this.props.items.map(function(item){
+						return(<Item_Card data={item} />)
+					})
+				}
+				</div>				
+			)
+	}
+})
  
 ReactDOM.render(
-  <HelloWorld />,
+  <Cards items={[]} />,
   document.getElementById('app')
 );
 
