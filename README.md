@@ -11,10 +11,10 @@ The purpose here is to not think of things as a linear set of tasks but as a a l
 
 ### Tasks Needed to Reach Basic Funcitonality
 
--[x] Simple User Interface
--[ ] CRUD operations
--[ ] User functionality
--[ ] Task List and linearization
+- [x] Simple User Interface
+- [ ] CRUD operations
+- [ ] User functionality
+- [ ] Task List and linearization
 
 ### longterm goals and funcitonality
 
