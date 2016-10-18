@@ -16,14 +16,16 @@ other flages
 
 
 */
-
 var Modal=ReactBootstrap.Modal;
 var Navbar=ReactBootstrap.Navbar;
 var Nav=ReactBootstrap.Nav;
 var NavItem=ReactBootstrap.NavItem;
 var NavDropdown=ReactBootstrap.NavDropdown;
 var MenuItem=ReactBootstrap.MenuItem;
+var Button =ReactBootstrap.Button
 var socket;
+
+
 
 
 
@@ -91,22 +93,53 @@ var Bar=(
 
 
 var ItemBarComponent= React.createClass({
+	defaultText:"write here...",
+	defaultTitle:"Title",
 	getInitialState:function(){
 		return({
-			show:false
+			show:false,
+			value:this.defaultText,
+			title:""
 		})
+	},
+	addHandler:function(e){
+		e.preventDefault();
+		var data={title:"",content:""}
+		$(e.target).children().each(
+			function(){
+				data[this.name]=this.value;
+			})
 	},
 	handleClick:function(event){
 		this.setState({show:true})
 	},
+	clearDefault:function(event,defaultVal){
+
+		if(event.target.textContent==defaultVal || event.target.value==defaultVal){
+			console.log("default found")
+			//this.setState({value:""})
+			event.target.textContent=""	
+			event.target.value=""	
+		}
+	},
 	render:function(){
+		if(this.state.value==""){
+			this.setState({value:this.defaultText});
+		}
+
 		if( this.state.show){
 			return(
 			<div className="item_input">
-				<form className="new_item">
-					<input className="title_input" type="text"/>
-					<textarea className="content_input"></textarea>
+				<form id="item_form" className="new_item" onSubmit={this.addHandler}>
+					<input name="title" className="title_input"  type="text" onClick={(e)=>this.clearDefault(e,this.defaultTitle)} defaultValue="Title"/>
+					<div name="content" contentEditable={true} className="content_input" onClick={(e)=>this.clearDefault(e,this.defaultText)} onChange={this.handleChange} >{this.state.value}</div>
 				</form>
+				<div className="BottomBar">
+					<Button>[task]</Button>
+					<Button>[img]</Button>
+					<Button>[list]</Button>
+					<Button type="submit" className="right" form="item_form">+</Button>
+				</div>
 			</div>
 		
 			)
@@ -140,7 +173,7 @@ var Main=React.createClass({
 		return(
 			<div>
 				{Bar}
-				<ItemBarComponent />
+				<ItemBarComponent  />
 			</div>
 			)
 	}

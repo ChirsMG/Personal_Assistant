@@ -1,19 +1,41 @@
 /*Personal assistant main style sheet*/
+body{
+	background-color: #F0F0F0;
+}
 
+/* general style classes*/
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+
+
+
+/* add item style*/
 .new_item{
+	background-color: #FFFFFF;
 	margin:auto;
+	width:80ex;
 	display: block;
 	z-index:-1;
 }
 
 .title_input{
-	width:80ex;
+	font-size:16px;
+	font-weight: 600;
+	border:none;
+	width:70ex;
 	margin:auto;
 	padding:8px;
 	display: block;
 }
 
 .content_input{
+	color: #909090;
+	padding: 8px;
+	border:none;
 	width:80ex;
 	margin:auto;
 	margin-top:5px;
@@ -29,13 +51,19 @@
 
 }
 
+.BottomBar{
+	background-color: #FFFFFF;
+	width:80ex;
+	margin:auto;
+}
+
 /* Card and Gallery info */
 .Card_display{
 	margin-top:25px; 
 }
 
 .Card{ padding: 5px;
-	background-color: gray;
+	background-color: #FFFFFF;
 	min-width: 30ex;
 	width: 15%;
 	min-height: 15em;
