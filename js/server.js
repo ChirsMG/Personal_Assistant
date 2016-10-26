@@ -12,11 +12,15 @@ var con = mysql.createConnection({
 	databse:
 })*/
 
+
+// load DB conneciton
 var Mongo=require("mongodb");
 var MongoClient=Mongo.Client;
 
 
 
+//CRUD functions (to be used in asynchonous function)
+// each function perfoms the opperation and attempr to handle error
 function add_item(db,userID,item){
 	collection=db.collection('items');
 	collection.insert(item,function(err,result){
@@ -36,10 +40,51 @@ function update_item(db,userID,itemID,update){
 		} else if (numUpdated){
 			console.log("successfuly inserted %d documents into 'item' colleciton")
 		}else{
-		 	add_item(db,userID,item)//get item by id?
+			//uh.... Not sure what I was intending here... possibly an auto retry?
+		 	//add_item(db,userID,item)  //get item by id?
 		}
 	});
 };
+
+function deleteItem(db,userID,itemID){
+	collection=db.collection('items');
+	collection.remove({"_id":itemID},{$set:{update}},function(err,result){
+		if(err){
+			console.log(err);
+		}else{
+		 	console.log("record deleted successfuly")
+		}
+	}
+
+};
+
+function getItem(db,userID,itemID){
+	var i=1
+	var returnval=0
+	collection=db.collection('items');
+	var curosr;
+	if (itemID){
+		cursor=collection.find({"userID":userID,,"_ID":itemID});
+	}else{
+		cursor=collection.find({"userID":userID});
+	}
+	cursor.toArray(function(err,docs){
+		if(err){
+			console.log("error retreiving docs: ",err)
+		}else{
+		    var intCount = docs.length;
+            if (intCount > 0) {
+            	return docs
+            }else{
+            	console.log("no records found")
+            }
+		}
+		
+	})
+};
+
+
+//function to enable asynchronous operaiton
 function asyncDB(db,userID,callback,items){
 	for(var item in items){
 		callback(db,userID,item);
@@ -73,7 +118,7 @@ io.on('connection',function(socket){
 			//look for tag by name
 			// add tag id item id relationship
 		});
-		socket.on("add_item", function(items){
+		socket.on("addItem", function(items){
 			MongoClient.Connect(mongodb:localost:2017/personal_assitant, function(err,db){
 				//TO DO: add asyncronous add item
 
@@ -93,6 +138,11 @@ io.on('connection',function(socket){
 			// add tag id item id relationship
 			
 		});
+		socket.on("getItem", function(items)){
+			Mongo.Client.Connect(mongodb:localost:2017/personal_assitant, function(err,db){
+				asyncDB(db,00,getItems,items)
+			})
+		}
 	});
 
 //TO DO: handle login

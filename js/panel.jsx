@@ -6,7 +6,7 @@
  test 	- indicates that object has no production features or 
  db		- indicates for debugging purposes
 
-other flages
+other flags
  G_/{start uppercase} 	- indicates global scoped variable
  {all caps}				- indicates static definition
 
@@ -26,9 +26,43 @@ var Button =ReactBootstrap.Button
 var socket;
 
 
+//Global data structures
+var CURRENTUSER=0;
+var newItem={
+	title: null,
+	content: null ,
+	user:CURRENTUSER
+}
+var PendingItems=[]
+var Items=[]
+
+/******** CLIENT EMITTED EVENTS *********
 
 
+addItem	- sends items info in JSON form to server
 
+info   	- [UNUSED] sends empty info
+
+login 	- sends hashed login info for confirmation
+
+
+*****************************************/
+
+
+/******** CLIENT RECIEVED EVENTS ********
+
+ConfirmAdd - recieve confirmation of create transaction for items
+	recieves bitmask indicating which items failed (0 = success, 1 = failure)
+
+connect - confirm connection to server
+
+error - general error response from server
+
+init - server is ready to recieve informaiton
+
+Login_accept - server has accepted login
+
+*****************************************/	
 
 //var socket = io.connect('104.131.42.153');
 //if(socket = io.connect('10.0.0.183:30')){
@@ -55,6 +89,10 @@ var socket;
 
 // socket.emit("info",{});
 
+// socket.on("sendTasks",function(data){
+//	loadTasks(data)
+//})
+
 document.body.addEventListener("unload",Unload);
 
 function Unload(){
@@ -67,7 +105,24 @@ function Unload(){
 
 
 */
-var Bar=(
+
+function requestItems(flags){
+	socket.emit("getTasks",{flags})
+}
+
+function loadItems(source){
+	// loads items from databse into Items global variable asynchronously
+	for (var i = source.length - 1; i >= 0; i--) {
+		Items.append(source[i])
+	};
+}
+
+
+// TO DO:  create a loop to check for updates and send updates
+
+
+
+var Bar=(// fairly standard bootsrap navbar
 	<Navbar>
 		<Navbar.Header>
 	      <Navbar.Brand>
@@ -75,9 +130,9 @@ var Bar=(
 	      </Navbar.Brand>
 	    </Navbar.Header>
 	    <Nav>
-	      <NavItem eventKey={1} href="#">[symbol for preferences]</NavItem>
-	      <NavItem eventKey={2} href="#">[symbol for alt view]</NavItem>
-	      <NavDropdown eventKey={3} title="Menu" id="basic-nav-dropdown">
+	      <NavItem eventKey={1} href="#">[preferences]</NavItem>
+	      <NavItem eventKey={2} href="#">[alt view]</NavItem>
+	      <NavDropdown eventKey={3} title="Menu"  id="basic-nav-dropdown">
 	        <MenuItem eventKey={3.1}>Action</MenuItem>
 	        <MenuItem eventKey={3.2}>Another action</MenuItem>
 	        <MenuItem eventKey={3.3}>Something else here</MenuItem>
@@ -91,32 +146,42 @@ var Bar=(
 
 
 
-
 var ItemBarComponent= React.createClass({
+	// defines the new item interface
+
 	defaultText:"write here...",
 	defaultTitle:"Title",
 	getInitialState:function(){
 		return({
-			show:false,
-			value:this.defaultText,
-			title:""
+			show:false,				// show the advanced interface
+			//value:this.defaultText, // 
+			title:"" 				// title value for item
 		})
 	},
 	addHandler:function(e){
+		// use form information to create item
 		e.preventDefault();
+
+		// creates JSON object for maping to new item
 		var data={title:"",content:""}
 		$(e.target).children().each(
 			function(){
 				data[this.name]=this.value;
+
 			})
+		// maps data object to newItem global object
+		newItem['title']=data['title']
+		newItem['title']=data['content']
+		console.log(data)
+		console.log(newItem)
+		//socket.emit("add",[data])
 	},
 	handleClick:function(event){
 		this.setState({show:true})
 	},
 	clearDefault:function(event,defaultVal){
-
 		if(event.target.textContent==defaultVal || event.target.value==defaultVal){
-			console.log("default found")
+			//console.log("default found")
 			//this.setState({value:""})
 			event.target.textContent=""	
 			event.target.value=""	
@@ -169,6 +234,7 @@ var ModalForm= (
 
 
 var Main=React.createClass({
+	
 	render:function(){
 		return(
 			<div>
@@ -187,6 +253,7 @@ ReactDOM.render(
 
 
 var Item_Card=React.createClass({
+	// defines a "Card" for displaying data containing title and content
 	getInitialstate:function(){
 		return(
 			data:{}
@@ -212,8 +279,10 @@ var Item_Card=React.createClass({
 	}
 });
 
+//Defines Gallery-of-cards widget
+
 var Cards=React.createClass({
-	getInitialstate:function(){
+	getInitialstate:function(){		// TO be used later
 		return(
 		{
 				
@@ -222,7 +291,8 @@ var Cards=React.createClass({
 	render:function(){
 		return(
 				<div className="Card_display">
-				{
+				{	
+					// Creates a maping of data (items) to 
 					this.props.items.map(function(item){
 						return(<Item_Card data={item} />)
 					})
@@ -231,19 +301,11 @@ var Cards=React.createClass({
 			)
 	}
 })
- 
+
+// Render the Card gallery
 ReactDOM.render(
   <Cards items={[]} />,
   document.getElementById('app')
 );
 
 
-
-
-/*THINGS TO LOOK UP
-
--nested classes?
-
-
-
-*/
