@@ -26,8 +26,10 @@ function add_item(db,userID,item){
 	collection.insert(item,function(err,result){
 		if(err){
 			console.log(err);
+			socket.emit("error",{err})
 		} else{
 			console.log("successfuly inserted %d documents into 'item' colleciton")
+			socket.emit("ADD_successful")
 		}
 	});	
 }
@@ -54,7 +56,8 @@ function deleteItem(db,userID,itemID){
 		}else{
 		 	console.log("record deleted successfuly")
 		}
-	}
+
+	});
 
 };
 
@@ -64,7 +67,7 @@ function getItem(db,userID,itemID){
 	collection=db.collection('items');
 	var curosr;
 	if (itemID){
-		cursor=collection.find({"userID":userID,,"_ID":itemID});
+		cursor=collection.find({"userID":userID,"_ID":itemID});
 	}else{
 		cursor=collection.find({"userID":userID});
 	}
@@ -113,36 +116,30 @@ io.on('connection',function(socket){
 		socket.on("login",function(login_info){
 			console.log("login info recieved")
 			socket.emit("login_accept");
-		)};
+		});
 		socekt.on("add_tag", function(){
 			//look for tag by name
 			// add tag id item id relationship
 		});
 		socket.on("addItem", function(items){
-			MongoClient.Connect(mongodb:localost:2017/personal_assitant, function(err,db){
+			MongoClient.Connect("mongodb:localost:2017/personal_assistant", function(err,db){
 				//TO DO: add asyncronous add item
-
 				if(err){
 					throw err;
 				}else{
 					console.log("database connnected");
-
 					asyncDB(db,00,add_item,items);
-
 				}
-
-
-
-				});
+			});
 			//look for tag by name
 			// add tag id item id relationship
 			
 		});
-		socket.on("getItem", function(items)){
-			Mongo.Client.Connect(mongodb:localost:2017/personal_assitant, function(err,db){
+		socket.on("getItem", function(items){
+			Mongo.Client.Connect("mongodb:localost:2017/personal_assistant", function(err,db){
 				asyncDB(db,00,getItems,items)
-			})
-		}
+			});
+		});
 	});
 
 //TO DO: handle login

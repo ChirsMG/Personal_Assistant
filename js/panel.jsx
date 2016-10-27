@@ -85,7 +85,9 @@ Login_accept - server has accepted login
 // socket.on("login_accept",function(){
 // 	console.log('login confirmed')
 // })
-
+//socket.on("ADD_sucess",function(){
+//	pendingItems=[];
+//})
 
 // socket.emit("info",{});
 
@@ -105,6 +107,23 @@ function Unload(){
 
 
 */
+function pushNewItem(){
+	// check if new item is a valid item
+	if(newItem){
+		if(newItem.content && newItem.content!="")
+		{
+			// push new item onto pending items
+			pendingItems.put(newItem);
+			// clear new item
+			newItem={
+				title: null,
+				content: null ,
+				user:CURRENTUSER
+			}
+		}
+	}
+	
+}
 
 function requestItems(flags){
 	socket.emit("getTasks",{flags})
@@ -119,6 +138,17 @@ function loadItems(source){
 
 
 // TO DO:  create a loop to check for updates and send updates
+
+function updateLoop(){
+	pushNewItem()
+	// every 30 seconds push items to server
+	setTimeout(function(){
+		socket.emit("addItem",pendingItems)
+
+	},30000)
+}
+
+setTimeout(updateLoop,10000)
 
 
 
@@ -161,6 +191,7 @@ var ItemBarComponent= React.createClass({
 	addHandler:function(e){
 		// use form information to create item
 		e.preventDefault();
+		pushNewItem();
 
 		// creates JSON object for maping to new item
 		var data={title:"",content:""}
