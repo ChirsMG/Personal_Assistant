@@ -104,7 +104,7 @@ io.on('connection',function(socket){
 		console.log("connection recieved");
 		// con.connect(function(err){
 		// 	if(err){
-		// 		console.log('Errpr connecting to DB');
+		// 		console.log('Error connecting to DB');
 		// 		return
 		// 	}
 		// 	consol.log("DB conneciton established");

@@ -33,7 +33,7 @@ var newItem={
 	content: null ,
 	user:CURRENTUSER
 }
-var PendingItems=[]
+var pendingItems=[]
 var Items=[]
 
 /******** CLIENT EMITTED EVENTS *********
@@ -63,37 +63,40 @@ init - server is ready to recieve informaiton
 Login_accept - server has accepted login
 
 *****************************************/	
-
+var socket;
 //var socket = io.connect('104.131.42.153');
 //if(socket = io.connect('10.0.0.183:30')){
 //	console.log('connect')
 //}
+if(socket=io.connect('198.162.0.38:30')){
+	console.log('connect')
+}
+socket.on("connect",function(){
+	console.log("client connect")
+})
 
-// socket.on("connect",function(){
-// 	console.log("client connect")
-// })
+socket.on("error",function(){
+	console.log("ERROR")
+})
 
-// socket.on("error",function(){
-// 	console.log("ERROR")
-// })
+socket.on("init",function(){
+	console.log("logging in");
+	socket.emit("login",{username:"MASTER", pwd:"TEMPLOGIN"});
+})
 
-// socket.on("init",function(){
-// 	console.log("logging in");
-// 	socket.emit("login",{username:"MASTER", pwd:"TEMPLOGIN"});
-// })
+socket.on("login_accept",function(){
+	console.log('login confirmed')
+})
+socket.on("ADD_sucess",function(){
+	Items.append(pendingItems)
+	pendingItems=[];
+})
 
-// socket.on("login_accept",function(){
-// 	console.log('login confirmed')
-// })
-//socket.on("ADD_sucess",function(){
-//	pendingItems=[];
-//})
+socket.emit("info",{});
 
-// socket.emit("info",{});
-
-// socket.on("sendTasks",function(data){
-//	loadTasks(data)
-//})
+socket.on("sendTasks",function(data){
+	loadTasks(data)
+})
 
 document.body.addEventListener("unload",Unload);
 
@@ -140,6 +143,8 @@ function loadItems(source){
 // TO DO:  create a loop to check for updates and send updates
 
 function updateLoop(){
+	console.log(pendingItems)
+	console.log(Items)
 	pushNewItem()
 	// every 30 seconds push items to server
 	setTimeout(function(){
@@ -184,7 +189,7 @@ var ItemBarComponent= React.createClass({
 	getInitialState:function(){
 		return({
 			show:false,				// show the advanced interface
-			//value:this.defaultText, // 
+			value:this.defaultText, // 
 			title:"" 				// title value for item
 		})
 	},
@@ -193,18 +198,20 @@ var ItemBarComponent= React.createClass({
 		e.preventDefault();
 		pushNewItem();
 
-		// creates JSON object for maping to new item
+		// creates JSON object for maping to new item (contentedtiable is in textcontent)
 		var data={title:"",content:""}
 		$(e.target).children().each(
 			function(){
 				data[this.name]=this.value;
+				console.log(this,this.value)
 
 			})
 		// maps data object to newItem global object
 		newItem['title']=data['title']
-		newItem['title']=data['content']
-		console.log(data)
+		newItem['content']=data['itemContent']
+		console.log("data:",data)
 		console.log(newItem)
+		this.setState({show:false})
 		//socket.emit("add",[data])
 	},
 	handleClick:function(event){
@@ -228,7 +235,7 @@ var ItemBarComponent= React.createClass({
 			<div className="item_input">
 				<form id="item_form" className="new_item" onSubmit={this.addHandler}>
 					<input name="title" className="title_input"  type="text" onClick={(e)=>this.clearDefault(e,this.defaultTitle)} defaultValue="Title"/>
-					<div name="content" contentEditable={true} className="content_input" onClick={(e)=>this.clearDefault(e,this.defaultText)} onChange={this.handleChange} >{this.state.value}</div>
+					<div name="itemContent" contentEditable={true} className="content_input" onClick={(e)=>this.clearDefault(e,this.defaultText)} onChange={this.handleChange} >{this.state.value}</div>
 				</form>
 				<div className="BottomBar">
 					<Button>[task]</Button>
@@ -287,7 +294,7 @@ var Item_Card=React.createClass({
 	// defines a "Card" for displaying data containing title and content
 	getInitialstate:function(){
 		return(
-			data:{}
+			stuff:{}
 			)
 	},
 	render:function(){
@@ -322,12 +329,13 @@ var Cards=React.createClass({
 	render:function(){
 		return(
 				<div className="Card_display">
-				{	
-					// Creates a maping of data (items) to 
+					{// Creates a maping of data (items) to 
 					this.props.items.map(function(item){
-						return(<Item_Card data={item} />)
+						return(
+							<Item_Card data={item} />
+							)
 					})
-				}
+					}
 				</div>				
 			)
 	}
@@ -335,7 +343,7 @@ var Cards=React.createClass({
 
 // Render the Card gallery
 ReactDOM.render(
-  <Cards items={[]} />,
+  <Cards items={Items.concat(pendingItems)} />,
   document.getElementById('app')
 );
 
