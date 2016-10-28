@@ -89,7 +89,7 @@ socket.on("init",function(){
 socket.on("login_accept",function(){
 	console.log('login confirmed')
 })
-socket.on("ADD_sucess",function(){
+socket.on("ADD_success",function(){
 	Items.append(pendingItems)
 	pendingItems=[];
 })
@@ -97,7 +97,7 @@ socket.on("ADD_sucess",function(){
 socket.emit("confirmConn",{});
 console.log("confirming connection")
 
-socket.on("sendTasks",function(data){
+socket.on("sendItems",function(data){
 	loadTasks(data)
 })
 
@@ -119,7 +119,7 @@ function pushNewItem(){
 		if(newItem.content && newItem.content!="")
 		{
 			// push new item onto pending items
-			pendingItems.put(newItem);
+			pendingItems=pendingItems.concat(newItem);
 			// clear new item
 			newItem={
 				title: null,
@@ -132,13 +132,15 @@ function pushNewItem(){
 }
 
 function requestItems(flags){
-	socket.emit("getTasks",{flags})
+	console.log("requestingItems")
+	socket.emit("getItem",{flags})
 }
 
 function loadItems(source){
+	console.log("loadingItems")
 	// loads items from databse into Items global variable asynchronously
 	for (var i = source.length - 1; i >= 0; i--) {
-		Items.append(source[i])
+		Items.concat(source[i])
 	};
 }
 
@@ -146,17 +148,18 @@ function loadItems(source){
 // TO DO:  create a loop to check for updates and send updates
 
 function updateLoop(){
+	console.log("update")
 	console.log(pendingItems)
 	console.log(Items)
-	pushNewItem()
 	// every 30 seconds push items to server
-	setTimeout(function(){
+	if(pendingItems.length){
+		pushNewItem()
 		socket.emit("addItem",pendingItems)
-
-	},30000)
+	}
+	requestItems();
 }
-
-setTimeout(updateLoop,10000)
+requestItems();
+setInterval(updateLoop,20000)
 
 
 
@@ -205,8 +208,14 @@ var ItemBarComponent= React.createClass({
 		var data={title:"",content:""}
 		$(e.target).children().each(
 			function(){
-				data[this.name]=this.value;
-				console.log(this,this.value)
+				console.log(this)
+				if(this.value){
+					data[this.name]=this.value;
+					console.log("name",this.name,"data:",this.value)
+				}else{
+					data[this.attributes['name'].value]=this.textContent
+					console.log("name:",this.attributes['name'].value,"data:",this.textContent)
+				}
 
 			})
 		// maps data object to newItem global object
@@ -238,7 +247,7 @@ var ItemBarComponent= React.createClass({
 			<div className="item_input">
 				<form id="item_form" className="new_item" onSubmit={this.addHandler}>
 					<input name="title" className="title_input"  type="text" onClick={(e)=>this.clearDefault(e,this.defaultTitle)} defaultValue="Title"/>
-					<div name="itemContent" contentEditable={true} className="content_input" onClick={(e)=>this.clearDefault(e,this.defaultText)} onChange={this.handleChange} >{this.state.value}</div>
+					<div name="itemContent" contentEditable={true} className="content_input" onFocus={(e)=>this.clearDefault(e,this.defaultText)} onChange={this.handleChange} >{this.state.value}</div>
 				</form>
 				<div className="BottomBar">
 					<Button>[task]</Button>

@@ -15,7 +15,7 @@ var con = mysql.createConnection({
 
 // load DB conneciton
 var Mongo=require("mongodb");
-var MongoClient=Mongo.Client;
+var MongoClient=Mongo.MongoClient;
 
 
 
@@ -29,7 +29,7 @@ function add_item(db,userID,item){
 			socket.emit("error",{err})
 		} else{
 			console.log("successfuly inserted %d documents into 'item' colleciton")
-			socket.emit("ADD_successful")
+			return(1)
 		}
 	});	
 }
@@ -89,8 +89,11 @@ function getItem(db,userID,itemID){
 
 //function to enable asynchronous operaiton
 function asyncDB(db,userID,callback,items){
+	console.log(items)
 	for(var item in items){
-		callback(db,userID,item);
+		console.log(item)
+		item=items[item]
+		return(callback(db,userID,item));
 	}
 }
 console.log("running");
@@ -119,7 +122,7 @@ io.on('connection',function(socket){
 		// 	consol.log("DB conneciton established");
 		// })
 		socket.emit("connect");
-		scoket.on("error",function(err){
+		socket.on("error",function(err){
 			console.log("error",err)
 		})
 		socket.on("confirmConn",function() {
@@ -137,13 +140,17 @@ io.on('connection',function(socket){
 			// add tag id item id relationship
 		});
 		socket.on("addItem", function(items){
-			MongoClient.Connect("mongodb:localost:2017/personal_assistant", function(err,db){
+			MongoClient.connect("mongodb://localhost:27017/personal_assistant", function(err,db){
 				//TO DO: add asyncronous add item
 				if(err){
 					throw err;
+
 				}else{
 					console.log("database connnected");
-					asyncDB(db,00,add_item,items);
+					console.log("adding items:",items)
+					if(asyncDB(db,00,add_item,items)){
+						socket.emit("ADD_success")
+					}
 				}
 			});
 			//look for tag by name
@@ -151,8 +158,9 @@ io.on('connection',function(socket){
 			
 		});
 		socket.on("getItem", function(items){
-			Mongo.Client.Connect("mongodb:localost:2017/personal_assistant", function(err,db){
-				asyncDB(db,00,getItems,items)
+			MongoClient.connect("mongodb://localhost:27017/personal_assistant", function(err,db){
+				console.log("getting Items")
+				socket.emit("sendItem",asyncDB(db,00,getItem,items))
 			});
 		});
 	});
