@@ -93,12 +93,21 @@ function asyncDB(db,userID,callback,items){
 		callback(db,userID,item);
 	}
 }
-
 console.log("running");
+setInterval(function() {
+		console.log("running")
+	
+	}, 15000);
+
+
+
 app.get('/',function(req,res){
 	console.log("http connect");
 	res.sendfile(__dirname + '/index.html');
 });
+io.on("error",function(err){
+	console.log("error",err)
+})
 
 io.on('connection',function(socket){
 		console.log("connection recieved");
@@ -109,7 +118,12 @@ io.on('connection',function(socket){
 		// 	}
 		// 	consol.log("DB conneciton established");
 		// })
-		socket.emit("init",{});
+		socket.emit("connect");
+		scoket.on("error",function(err){
+			console.log("error",err)
+		})
+		socket.on("confirmConn",function() {
+			console.log("connection confirmed")		})
 		socket.on('disconnect', function(){
 			console.log("connection closed");
 		});
@@ -117,7 +131,8 @@ io.on('connection',function(socket){
 			console.log("login info recieved")
 			socket.emit("login_accept");
 		});
-		socekt.on("add_tag", function(){
+		socket.on("add_tag", function(){
+			console.log("taggin")
 			//look for tag by name
 			// add tag id item id relationship
 		});

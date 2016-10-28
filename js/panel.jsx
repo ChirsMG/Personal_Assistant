@@ -66,17 +66,19 @@ Login_accept - server has accepted login
 var socket;
 //var socket = io.connect('104.131.42.153');
 //if(socket = io.connect('10.0.0.183:30')){
+if(socket = io.connect('http://localhost:30')){
 //	console.log('connect')
 //}
-if(socket=io.connect('198.162.0.38:30')){
+//if(socket=io.connect('198.162.0.38:30')){
 	console.log('connect')
+	socket.emit("confirmConn")
 }
 socket.on("connect",function(){
 	console.log("client connect")
 })
 
-socket.on("error",function(){
-	console.log("ERROR")
+socket.on("error",function(err){
+	console.log("ERROR",err)
 })
 
 socket.on("init",function(){
@@ -92,7 +94,8 @@ socket.on("ADD_sucess",function(){
 	pendingItems=[];
 })
 
-socket.emit("info",{});
+socket.emit("confirmConn",{});
+console.log("confirming connection")
 
 socket.on("sendTasks",function(data){
 	loadTasks(data)
