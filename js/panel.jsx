@@ -90,7 +90,8 @@ socket.on("login_accept",function(){
 	console.log('login confirmed')
 })
 socket.on("ADD_success",function(){
-	Items.append(pendingItems)
+	console.log("items added clearing pending items")
+	Items.concat(pendingItems)
 	pendingItems=[];
 })
 
@@ -98,7 +99,8 @@ socket.emit("confirmConn",{});
 console.log("confirming connection")
 
 socket.on("sendItems",function(data){
-	loadTasks(data)
+	console.log("items recieved")
+	loadItems(data)
 })
 
 document.body.addEventListener("unload",Unload);
@@ -131,16 +133,19 @@ function pushNewItem(){
 	
 }
 
-function requestItems(flags){
+function requestItems(itemIDs){
 	console.log("requestingItems")
-	socket.emit("getItem",{flags})
+	itemIDs=Items.map(function(a){
+		return(a._id)
+	})
+	socket.emit("getItem",itemIDs)
 }
 
 function loadItems(source){
 	console.log("loadingItems")
 	// loads items from databse into Items global variable asynchronously
 	for (var i = source.length - 1; i >= 0; i--) {
-		Items.concat(source[i])
+		Items=Items.concat(source[i])
 	};
 }
 
@@ -149,17 +154,15 @@ function loadItems(source){
 
 function updateLoop(){
 	console.log("update")
-	console.log(pendingItems)
-	console.log(Items)
-	// every 30 seconds push items to server
+	console.log("concated",Items.concat(pendingItems),"length:",Items.concat(pendingItems).length)
+	pushNewItem()
 	if(pendingItems.length){
-		pushNewItem()
+		console.log("adding item")
 		socket.emit("addItem",pendingItems)
 	}
 	requestItems();
+	UpdateGallery();
 }
-requestItems();
-setInterval(updateLoop,20000)
 
 
 
@@ -261,7 +264,7 @@ var ItemBarComponent= React.createClass({
 		}else{
 			return(
 				<div>
-					<input type="text" className="title_input" onClick={this.handleClick.bind(this)} value="create an item"/>
+					<input type="text" className="title_input" onClick={this.handleClick} value="create an item"/>
 				</div>
 				)
 		}
@@ -310,20 +313,26 @@ var Item_Card=React.createClass({
 			)
 	},
 	render:function(){
+		var List;
+		if(this.props.data.hasOwnProperty('list')){
+				List=<div className="item_list">
+						<ul>
+						{this.props.data.list.map(function(item){
+							return(
+								<li>{item}</li>
+								)
+							})}
+						</ul>
+					</div>
+				}else{
+					List=""
+				}
 		return(
 			<div className="Card">
 				<div className="item_title">{this.props.data.title}</div>
 				<div className="item_description">{this.props.data.description}</div>
-				<div className="item_list">
-					<ul>
-					{this.props.data.list.map(function(item){
-						return(
-							<li>{item}</li>
-							)
-					})}
-					</ul>
+					{this.List}
 				</div>
-			</div>
 			)
 
 	}
@@ -332,17 +341,30 @@ var Item_Card=React.createClass({
 //Defines Gallery-of-cards widget
 
 var Cards=React.createClass({
-	getInitialstate:function(){		// TO be used later
+	// componentWillMount:function(){
+	// 	console.log("Mounting..",Items,pendingItems)
+	// 	{this.setState({items:(Items.concat(pendingItems))});}
+	// },
+	// shouldComponentUpdate:function(nextProps,nextState){
+	// 	console.log("should Update?")
+	// 	return !(this.state.items.length==Items.concat(pendingItems.length))
+	// },
+	getInitialState:function(){		// TO be used later
 		return(
 		{
-				
+			items:(Items.concat(pendingItems)) //mutable content in state	
 		})
 	},
 	render:function(){
+		/*setTimeout(function(){
+			{this.setState({items:(Items.concat(pendingItems))})
+			console.log("gallery update")}
+		}.bind(this),10000)*/
 		return(
 				<div className="Card_display">
 					{// Creates a maping of data (items) to 
-					this.props.items.map(function(item){
+					this.state.items.map(function(item){
+						console.log(item)
 						return(
 							<Item_Card data={item} />
 							)
@@ -353,10 +375,17 @@ var Cards=React.createClass({
 	}
 })
 
+requestItems();
+setInterval(updateLoop,30000)
+
 // Render the Card gallery
+function UpdateGallery(){
 ReactDOM.render(
-  <Cards items={Items.concat(pendingItems)} />,
+  <Cards />,
   document.getElementById('app')
 );
+}
+
+
 
 

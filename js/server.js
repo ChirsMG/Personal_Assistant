@@ -21,14 +21,17 @@ var MongoClient=Mongo.MongoClient;
 
 //CRUD functions (to be used in asynchonous function)
 // each function perfoms the opperation and attempr to handle error
-function add_item(db,userID,item){
+function add_item(db,userID,item,data,socket){
 	collection=db.collection('items');
+	console.log("item: ",item)
 	collection.insert(item,function(err,result){
+		console.log("item to be inserted: ", item)
 		if(err){
 			console.log(err);
-			socket.emit("error",{err})
+			return(0)
 		} else{
-			console.log("successfuly inserted %d documents into 'item' colleciton")
+			console.log("successfuly inserted documents into 'item' colleciton")
+			console.log(result)
 			return(1)
 		}
 	});	
@@ -40,7 +43,7 @@ function update_item(db,userID,itemID,update){
 		if(err){
 			console.log(err);
 		} else if (numUpdated){
-			console.log("successfuly inserted %d documents into 'item' colleciton")
+			console.log("successfuly updated %d documents into 'items' colleciton")
 		}else{
 			//uh.... Not sure what I was intending here... possibly an auto retry?
 		 	//add_item(db,userID,item)  //get item by id?
@@ -48,7 +51,7 @@ function update_item(db,userID,itemID,update){
 	});
 };
 
-function deleteItem(db,userID,itemID){
+function deleteItem(db,userID,itemID,data){
 	collection=db.collection('items');
 	collection.remove({"_id":itemID},{$set:{update}},function(err,result){
 		if(err){
@@ -58,18 +61,18 @@ function deleteItem(db,userID,itemID){
 		}
 
 	});
-
 };
 
-function getItem(db,userID,itemID){
+function getItem(db,userID,itemID,socket){
 	var i=1
 	var returnval=0
 	collection=db.collection('items');
-	var curosr;
-	if (itemID){
-		cursor=collection.find({"userID":userID,"_ID":itemID});
+	var cursor;
+	console.log("getting items ID retricted: ",itemID)
+	if (itemID.length){
+		cursor=collection.find({"user":userID,"_ID":{$nin: itemID}});
 	}else{
-		cursor=collection.find({"userID":userID});
+		cursor=collection.find({"user":userID});
 	}
 	cursor.toArray(function(err,docs){
 		if(err){
@@ -77,24 +80,22 @@ function getItem(db,userID,itemID){
 		}else{
 		    var intCount = docs.length;
             if (intCount > 0) {
-            	return docs
+            	//console.log("items retrieved: ",docs)
+            	socket.emit("sendItems",docs)
             }else{
             	console.log("no records found")
             }
 		}
 		
-	})
+	});
 };
 
 
 //function to enable asynchronous operaiton
-function asyncDB(db,userID,callback,items){
+function asyncDB(db,userID,callback,items,socket){
 	console.log(items)
-	for(var item in items){
-		console.log(item)
-		item=items[item]
-		return(callback(db,userID,item));
-	}
+	callback(db,userID,items,socket)
+	
 }
 console.log("running");
 setInterval(function() {
@@ -152,15 +153,23 @@ io.on('connection',function(socket){
 						socket.emit("ADD_success")
 					}
 				}
+
 			});
 			//look for tag by name
 			// add tag id item id relationship
 			
 		});
 		socket.on("getItem", function(items){
+			var data=new Object();
 			MongoClient.connect("mongodb://localhost:27017/personal_assistant", function(err,db){
-				console.log("getting Items")
-				socket.emit("sendItem",asyncDB(db,00,getItem,items))
+				if(err){
+					console.log("error: ",err)
+				}else{
+					//console.log("getting Items")
+					asyncDB(db,00,getItem,items,socket)
+
+					
+				}
 			});
 		});
 	});
