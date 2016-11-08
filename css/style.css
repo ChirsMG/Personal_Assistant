@@ -84,3 +84,10 @@ body{
 	margin:2px;
 	padding:4px;
 }
+
+.deleteBtn{
+	display: inline;
+	width:2ex;
+	height: 2em;
+	float:right;
+}

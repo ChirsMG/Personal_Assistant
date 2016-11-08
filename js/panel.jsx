@@ -95,8 +95,6 @@ socket.on("ADD_success",function(){
 	pendingItems=[];
 })
 
-socket.emit("confirmConn",{});
-console.log("confirming connection")
 
 socket.on("sendItems",function(data){
 	console.log("items recieved")
@@ -133,11 +131,12 @@ function pushNewItem(){
 	
 }
 
-function requestItems(itemIDs){
+function requestItems(){
 	console.log("requestingItems")
-	itemIDs=Items.map(function(a){
+	var itemIDs=Items.map(function(a){
 		return(a._id)
 	})
+	//console.log("ID:",itemIDs)
 	socket.emit("getItem",itemIDs)
 }
 
@@ -147,6 +146,9 @@ function loadItems(source){
 	for (var i = source.length - 1; i >= 0; i--) {
 		Items=Items.concat(source[i])
 	};
+	//console.log(Items[0])
+	console.log("items loaded current items:", Items.length)
+	UpdateGallery();
 }
 
 
@@ -154,7 +156,7 @@ function loadItems(source){
 
 function updateLoop(){
 	console.log("update")
-	console.log("concated",Items.concat(pendingItems),"length:",Items.concat(pendingItems).length)
+	//console.log("concated",Items.concat(pendingItems),"length:",Items.concat(pendingItems).length)
 	pushNewItem()
 	if(pendingItems.length){
 		console.log("adding item")
@@ -312,7 +314,16 @@ var Item_Card=React.createClass({
 			stuff:{}
 			)
 	},
+	handleClick:function(){
+		console.log("click")
+	},
+	Delete:function(){
+		Items.splice(this.props.index,1) // remove item from list
+		//socket.emit("deleteItem",this.props.data._id) //remove item from database
+		updateLoop();
+	},
 	render:function(){
+		{console.log("data: ",this.props.data)}
 		var List;
 		if(this.props.data.hasOwnProperty('list')){
 				List=<div className="item_list">
@@ -328,9 +339,10 @@ var Item_Card=React.createClass({
 					List=""
 				}
 		return(
-			<div className="Card">
+			<div className="Card" onClick={this.handleClick()}>
 				<div className="item_title">{this.props.data.title}</div>
-				<div className="item_description">{this.props.data.description}</div>
+				<Button className="deleteBtn" onClick={this.Delete()}>x</Button>
+				<div className="item_description">{this.props.data.content}</div>
 					{this.List}
 				</div>
 			)
@@ -341,49 +353,46 @@ var Item_Card=React.createClass({
 //Defines Gallery-of-cards widget
 
 var Cards=React.createClass({
-	// componentWillMount:function(){
-	// 	console.log("Mounting..",Items,pendingItems)
-	// 	{this.setState({items:(Items.concat(pendingItems))});}
-	// },
-	// shouldComponentUpdate:function(nextProps,nextState){
-	// 	console.log("should Update?")
-	// 	return !(this.state.items.length==Items.concat(pendingItems.length))
-	// },
-	getInitialState:function(){		// TO be used later
+	getInitialState:function(){		
 		return(
 		{
 			items:(Items.concat(pendingItems)) //mutable content in state	
 		})
 	},
 	render:function(){
+		console.log("rendering gallery")
 		/*setTimeout(function(){
 			{this.setState({items:(Items.concat(pendingItems))})
 			console.log("gallery update")}
 		}.bind(this),10000)*/
+
+		// Creates a maping of data (items) to
+		
 		return(
 				<div className="Card_display">
-					{// Creates a maping of data (items) to 
-					this.state.items.map(function(item){
-						console.log(item)
+					{
+					Items.concat(pendingItems).map(function(item){
+						console.log("mapping")
+						//console.log("key:",item.key)
 						return(
-							<Item_Card data={item} />
+							<Item_Card data={item}  />
 							)
-					})
+						})
 					}
 				</div>				
 			)
 	}
 })
-
-requestItems();
+updateLoop();
 setInterval(updateLoop,30000)
 
 // Render the Card gallery
 function UpdateGallery(){
-ReactDOM.render(
-  <Cards />,
-  document.getElementById('app')
-);
+	//console.log(Items)
+	ReactDOM.render(
+	  <Cards />,
+	  document.getElementById('app')
+	);
 }
 
 

@@ -53,7 +53,7 @@ function update_item(db,userID,itemID,update){
 
 function deleteItem(db,userID,itemID,data){
 	collection=db.collection('items');
-	collection.remove({"_id":itemID},{$set:{update}},function(err,result){
+	collection.remove({"_id":Mongo.ObjectId(itemID)},{$set:{update}},function(err,result){
 		if(err){
 			console.log(err);
 		}else{
@@ -68,9 +68,12 @@ function getItem(db,userID,itemID,socket){
 	var returnval=0
 	collection=db.collection('items');
 	var cursor;
-	console.log("getting items ID retricted: ",itemID)
+	itemID=itemID.map(function(idString){ //convert from a string to hex ID value
+		return(Mongo.ObjectId(idString))
+	})
 	if (itemID.length){
-		cursor=collection.find({"user":userID,"_ID":{$nin: itemID}});
+		console.log("ID restricted")
+		cursor=collection.find({"user":userID,"_id":{ $nin: itemID}});
 	}else{
 		cursor=collection.find({"user":userID});
 	}
@@ -80,7 +83,7 @@ function getItem(db,userID,itemID,socket){
 		}else{
 		    var intCount = docs.length;
             if (intCount > 0) {
-            	//console.log("items retrieved: ",docs)
+             	console.log("items retrieved:",docs.length)
             	socket.emit("sendItems",docs)
             }else{
             	console.log("no records found")
@@ -93,7 +96,7 @@ function getItem(db,userID,itemID,socket){
 
 //function to enable asynchronous operaiton
 function asyncDB(db,userID,callback,items,socket){
-	console.log(items)
+	//console.log(items)
 	callback(db,userID,items,socket)
 	
 }
@@ -135,6 +138,17 @@ io.on('connection',function(socket){
 			console.log("login info recieved")
 			socket.emit("login_accept");
 		});
+		socket.on("deleteItem",function(item){
+			MongoClient.connect("mongodb://localhost:27017/personal_assistant", function(err,db){
+				if(err){
+					console.log("error: ",err)
+				}else{
+					asyncDB(db,00,deleteItem,item,socket)
+
+					
+				}
+			});
+		})
 		socket.on("add_tag", function(){
 			console.log("taggin")
 			//look for tag by name
