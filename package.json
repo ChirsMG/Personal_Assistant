@@ -1,0 +1,22 @@
+{
+  "name": "personal_assistant",
+  "version": "1.0.0",
+  "description": "personal assistant app",
+  "main": "PA.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChristopherMGlass/Personal_Assistant.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChristopherMGlass/Personal_Assistant/issues"
+  },
+  "homepage": "https://github.com/ChristopherMGlass/Personal_Assistant#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}

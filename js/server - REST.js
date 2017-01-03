@@ -1,6 +1,6 @@
 var app= require('express')();
 var server= app.listen(30);
-var io = require('socket.io').listen(server);
+var router= app.router();
 /*var users=["MASTER"];
 var PWDs=["TEMPLOGIN"]; //TODO: hash function
 var MYSQL =require('mysql')
@@ -38,6 +38,7 @@ function add_item(db,userID,item,data,socket){
 	});
 		
 }
+
 
 function update_item(db,userID,itemID,update){
 	collection=db.collection('items');
@@ -102,7 +103,6 @@ function getItem(db,userID,itemID){
 //function to enable asynchronous operaiton
 function asyncDB(db,userID,callback,items,socket){
 	//console.log(items)
-	  	socket.emit("sendItems",docs)
 	callback(db,userID,items,socket)
 	
 }
@@ -153,9 +153,70 @@ app.get('/',function(req,res){
 	console.log("http connect");
 	res.sendfile(__dirname + '/index.html');
 });
-io.on("error",function(err){
-	console.log("error",err)
-})
+
+app.use(express.json());
+
+//Init Routs (login, etc)
+app.post("/login/:user/:pass",function(req,res){
+	var pass=req.params.pass
+	var user= req.params.user
+	console.log("bod test:"req.body)
+	console.log("loging in", :user, "w/ ",pass)
+	res.send({success:1}); //TO DO add hash
+});
+
+app.use("/users",router);
+//TO DO: create login hash before for route
+
+
+
+
+
+
+
+
+//Basic User Routes
+router.get("/",function(req,res){
+	//TO DO send list of users by ID
+	console.log("USER LIST")
+});
+
+router.get("/:id",function(req,res){
+	var ID= req.params.id;
+	console.log("get user:",ID)
+});
+
+router.put("/:id",function(req,res){
+	var ID= req.params.id;
+	console.log("add user:",ID)
+});
+
+router.delete("/:id",function(req,res){
+	var ID= req.params.id;
+	console.log("remove",ID)
+});
+
+//ItemRoutes
+router.get("/items",function(req,res){
+	//TO DO send list of users by ID
+	console.log("ITEMS LIST for USER")
+});
+
+router.get("/items/:id",function(req,res){
+	var ID= req.params.id;
+	console.log("get item",ID)
+});
+router.post("/items"function(req,res){
+	var IDs= req.body.ids;
+	console.log("get items",IDs)
+});
+
+router.delete("/items/:id",function(req,res){
+	var ID= req.params.id;
+	console.log("remove item:",ID)
+});
+
+
 
 io.on('connection',function(socket){
 		console.log("connection recieved");
@@ -170,18 +231,6 @@ io.on('connection',function(socket){
 				console.log(Merr)
 			}else{
 				socket.emit("connect");
-				socket.on("error",function(err){
-					console.log("error",err)
-				})
-				socket.on("confirmConn",function() {
-					console.log("connection confirmed")		})
-				socket.on('disconnect', function(){
-					console.log("connection closed");
-				});
-				socket.on("login",function(login_info){
-					console.log("login info recieved")
-					socket.emit("login_accept");
-				});
 				socket.on("deleteItem",function(item){
 						if(err){
 							console.log("error: ",err)

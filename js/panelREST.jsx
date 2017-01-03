@@ -65,14 +65,14 @@ Login_accept - server has accepted login
 *****************************************/
 //REST SUPPORT
 class RESThandler{
-	function request(METHOD,URI,callback){
+	function request(METHOD,URI,callback,SEND){
 		var xmlHttp = new XMLHttpRequest();
     	xmlHttp.onreadystatechange = function() { 
 	        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
 				callback(XMLHttpRequest.responseText)
 		}
 		xmlHttp.open(METHOD,URI,true);
-		xmlHttp.send(null);
+		xmlHttp.send(SEND);
 	}
 }
 
@@ -144,21 +144,24 @@ function pushNewItem(){
 	}
 	
 }
+function itemhandler(stuff){
+
+}
 
 function requestItems(){
-	console.log("requestingItems")
 	var itemIDs=Items.map(function(a){
 		return(a._id)
 	})
-	//console.log("ID:",itemIDs)
-	socket.emit("getItem",itemIDs)
+	var URI= CURRENTUSER+"/items/"
+	RESThandler.request("GET",URI,loadItems,itemIDs)
+	console.log("requestingItems")
 }
 
 function loadItems(source){
 	console.log("loadingItems")
 	// loads items from databse into Items global variable asynchronously
 	for (var i = source.length - 1; i >= 0; i--) {
-		if(Items.length>10){
+		if(Items.length>10){ // for debugging, remove for tests
 			break;
 		}
 		Items=Items.concat(source[i])
