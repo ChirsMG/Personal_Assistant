@@ -4,22 +4,8 @@ var bodyParser = require('body-parser');
 var json=require('express-json')
 
 var crypto = require('crypto')
-var hash=crypto.createHash("sha512")
 
 var sessions={}
-
-
-/*var users=["MASTER"];
-var PWDs=["TEMPLOGIN"]; //TODO: hash function
-var MYSQL =require('mysql')
-
-var con = mysql.createConnection({
-	host:"localhost",
-	user:"app",
-	password:"Ma1nApp";
-	databse:
-})*/
-
 
 // load DB conneciton
 var Mongo=require("mongodb");
@@ -44,10 +30,8 @@ function add_item(db,userID,item,data,socket){
 			console.log("successfuly inserted documents into 'item' colleciton")
 			console.log(result)
 		}
-	});
-		
+	});	
 }
-
 
 function update_item(db,userID,itemID,update){
 	collection=db.collection('items');
@@ -60,8 +44,7 @@ function update_item(db,userID,itemID,update){
 			//uh.... Not sure what I was intending here... possibly an auto retry?
 		 	//add_item(db,userID,item)  //get item by id?
 		}
-	});
-	
+	});	
 };
 
 function deleteItem(db,userID,itemID,data){
@@ -74,7 +57,6 @@ function deleteItem(db,userID,itemID,data){
 		}
 
 	});
-	
 };
 
 function getItem(db,userID,itemID){
@@ -152,12 +134,12 @@ function LoadItems(userID){
 ///////////////////////////////////
 console.log("starting");
 setInterval(function() {
-		session.forEach(function(element,index){
+		for (var element in sessions){
 			element["timeleft"]=-15;
 			if(element.timeleft<=0){
-				this.splice(index)
+				sessions.splice(index)
 			}
-		})
+		}
 	}, 10000);
 
 
@@ -182,6 +164,7 @@ function updateToken(user,token){
 
 function saltAndHash(input){
 	var date= new Date().getTime();
+	var hash=crypto.createHash("sha512")
 	console.log(hash.update(input+date))
 	console.log("hash message:",input+date)
 	var digest=hash.digest("hex")
@@ -193,16 +176,24 @@ app.use(json());
 app.use(bodyParser.urlencoded({extended : false}));
 
 console.log("using json and urlencoded");
-var logger=function(req,res,next){
-	console.log("request:",req)
-	console.log("base URL", req.baseUrl)
-	res.json({message:"request recieved"})
-	next();
-}
+// var logger=function(req,res,next){
+// 	console.log("request:",req)
+// 	console.log("base URL", req.baseUrl)
+// 	res.json({message:"request recieved"})
+// 	next();
+// }
+
+//headers
 
 
-app.all(function(req,res,next){
-	res.json({message:"stuff"})
+app.use("/",function(req,res,next){
+	//console.log("all")
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'access-control-allow-origin, Access-Control-Allow-Method');
+    res.setHeader("Content-Type",'application/json')
+    res.setHeader('Access-Control-Allow-Methods','PUT')
+	console.log(res.get("Content-Type"))
+	//console.log(res)
 	next();
 })
 
@@ -210,22 +201,23 @@ app.all(function(req,res,next){
 
 
 // //Init Routs (login, etc)
-app.post("/login/:username/:pass",function(req,res,next){
+app.put("/login/:username/:pass",function(req,res,next){
 	var pass=req.params.pass
-	var user= req.params.user
+	var username= req.params.username
 	console.log("bod test:",req.body)
 	console.log("logging in", username, "w/ ",pass)
 	// TO DO verify pass with DB and get ID
 	var userId=0
 
 	//HASH FUNCTIONALITY- returns a hashed authtoken unique to user and session
-	var authHash = saltAndHash(user)
-	res.json({Auth_token:authHash["digest"]});
-	sessions[userId]={"user":user,"token":authHash["digest"], "start":authHash["stamp"],timeleft:300}
+	var authHash = saltAndHash(username)
+	res.json({user:username,Auth_token:authHash["digest"]});
+	sessions[userId]={"user":username,"token":authHash["digest"], "start":authHash["stamp"],timeleft:300}
 	console.log(sessions)
 	//res.send({success:1}); //TO DO add auth token functionaility
 	next();
 });
+
 
 var TESTrouter=express.Router();
 var router=express.Router("users");
@@ -257,17 +249,19 @@ var router=express.Router("users");
 // 	next();
 // })
 
-app.use(TESTrouter);
+//app.use(TESTrouter);
 
 
 
 //Basic User Routes
-router.all(function(req,res,next{
+router.all(function(req,res,next){
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000z');
+    res.send("auth token")
 	var user= req.params.user;
 	var token= req.params.token
 	if(updateToken(user,token)){
 		next();
-	}esle{
+	}else{
 		//TO DO send log out notificaiton
 	}
 })
