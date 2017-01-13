@@ -16,7 +16,7 @@ class RESThandler{
     		if(xmlHttp.readyState == xmlHttp.HEADERS_RECEIVED){
    				
 			}
-	        if (xmlHttp.readyState == 4 /*&& xmlHttp.status == 200*/){
+	        if (xmlHttp.readyState == 4 && xmlHttp.status != 404){
 	        	// LOGIN  and AUTH check
 				callback(xmlHttp.response,xmlHttp.getResponseHeader("Content-Type"),xmlHttp.status)
 	        	//console.log("response:",xmlHttp.response);
@@ -32,7 +32,8 @@ class RESThandler{
 
 function createItem(item){
 	console.log(baseURI)
-	var URI= baseURI//+"users/items/"//To DO do add auth token before users
+	var URI= baseURI  + "&Auth_token="+AUTHTOKEN //+"users/items/"//To DO do add auth token before users
+	console.log(URI)
 	RESThandler.request("GET",URI,confirm,null)
 	console.log("create item")
 }
@@ -88,9 +89,11 @@ function LoginTest(){
 function getAuthToken(res,type,status){
 	console.log("getting token")
 	console.log(res)
-	console.log(res.Auth_token)
-	res=JSON.parse(res)
-	console.log(res.user)
+	
+	if(res){
+		res=JSON.parse(res)
+		console.log(res.user)
+	}
  	if(type!="application/json"){
  		//ERROR
  		console.log("type error:",type)
