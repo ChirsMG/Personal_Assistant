@@ -1,6 +1,0 @@
-
-class MonitorSvc {
-    public static void main() {
-    system.println("Starting service Monitor")
-    }
-}
