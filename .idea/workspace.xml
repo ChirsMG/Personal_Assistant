@@ -39,21 +39,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PersonalAssistantGateway" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/out/production/Personal_Assistant/server/PersonalAssistantGateway">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="PersonalAssistantGateway" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/server/PersonalAssistantGateway">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+            <state relative-caret-position="221">
+              <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -126,6 +116,7 @@
         <option value="$PROJECT_DIR$/src/server/PersonalAssistantGateWay" />
         <option value="$PROJECT_DIR$/src/server/GatewayHandler.java" />
         <option value="$PROJECT_DIR$/src/server/monitorClass.java" />
+        <option value="$PROJECT_DIR$/out/production/Personal_Assistant/server/PersonalAssistantGateway" />
         <option value="$PROJECT_DIR$/src/server/PersonalAssistantGateway" />
       </list>
     </option>
@@ -506,15 +497,15 @@
     <entry file="file://$PROJECT_DIR$/out/production/Personal_Assistant/server/PersonalAssistantGateway">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="204">
-          <caret line="16" column="30" lean-forward="true" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+          <caret line="16" column="43" lean-forward="true" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server/PersonalAssistantGateway">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="0" lean-forward="true" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+        <state relative-caret-position="221">
+          <caret line="13" column="0" lean-forward="true" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

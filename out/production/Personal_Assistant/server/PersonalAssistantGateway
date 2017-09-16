@@ -14,7 +14,7 @@ class PersonalAssistantGatweway{
 
     ////
 
-    public static void main(){
+    public static void main(String[] args){
         HttpServer server;
         //listen for connection
         try {
