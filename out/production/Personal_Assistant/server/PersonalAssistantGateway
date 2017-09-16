@@ -5,9 +5,9 @@ import java.net.InetSocketAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-class PersonalAssitantGatweway{
+class PersonalAssistantGatweway{
     //CONFIGURATION -TODO MOVE TO FILE
-    private final static Logger LOGGER = Logger.getLogger(PersonalAssitantGatweway.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGatweway.class.getName());
 
 
 
