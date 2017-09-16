@@ -1,0 +1,12 @@
+Views
+- Card view 
+- Linerized list
+- graph view
+
+Common view elements
+- login 
+- input item
+
+Global data structures
+- sorted (Alpha-num) hashed(?) list by title
+- Displayed items list

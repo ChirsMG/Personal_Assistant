@@ -1,0 +1,27 @@
+#login function
+
+
+	var crypto=require('crypto')
+	var SHA-hash= crypto.createHash('SHA-3')
+
+function login(socket,username, password){
+	socket.emit("login",{name:username,pwd:password});
+
+}
+
+function create_item(socket,title,description){
+	socket.emit("add_item",{title:title,descript:descritpion})
+}
+
+fucntion tag_item(socket,tag, item_id){
+	socekt.emit("add_Tag",{ID:tag_id,tag_name:tag})
+}
+
+.on("add_tag", function(){
+	//look for tag by name
+	// add tag id item id relationship
+})
+.on("add_item", function(){
+	//look for tag by name
+	// add tag id item id relationship
+})
