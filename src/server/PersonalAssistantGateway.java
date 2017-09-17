@@ -21,10 +21,11 @@ public class PersonalAssistantGateway{
              server = HttpServer.create(new InetSocketAddress(8000), 0);
              server.createContext("/test", new GatewayHandler());
             LOGGER.info("server context created");
-            LOGGER.info("context: /test");
+            LOGGER.info("CanonicalHostName: "+server.getAddress().getAddress().getCanonicalHostName());
+             LOGGER.info("Host String : "+server.getAddress().getHostString());
             LOGGER.info("address:"+server.getAddress().getAddress().getHostAddress());
-            LOGGER.info("port: ");
-            LOGGER.info("hostName:");
+            LOGGER.info("port: "+server.getAddress().getPort());
+            LOGGER.info("hostName:"+server.getAddress().getHostName());
             server.start();
         }catch(Exception e){
             LOGGER.log(Level.SEVERE,"Exception: "+e.getMessage());
