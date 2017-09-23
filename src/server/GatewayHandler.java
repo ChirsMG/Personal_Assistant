@@ -8,7 +8,7 @@ import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
 class GatewayHandler implements  HttpHandler{
-    private final static Logger LOGGER = Logger.getLogger(GatewayHandler.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGateway.class.getName());
 
     @Override
     public void handle(HttpExchange exchange) throws IOException{
