@@ -23,6 +23,7 @@ public class PersonalAssistantGateway{
              server.setExecutor(null);
              server.start();
             LOGGER.info("server context created");
+            System.out.println(server);
             LOGGER.info("CanonicalHostName: "+server.getAddress().getAddress().getCanonicalHostName());
             LOGGER.info("Host String : "+server.getAddress().getHostString());
             LOGGER.info("address:"+server.getAddress().getAddress().getHostAddress());

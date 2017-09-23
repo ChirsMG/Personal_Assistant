@@ -1,7 +1,6 @@
 package server;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,13 +13,13 @@ class GatewayHandler implements  HttpHandler{
     @Override
     public void handle(HttpExchange exchange) throws IOException{
         LOGGER.info("using handler");
-
+        byte[] response="Hello World".getBytes();
         System.out.println("path: "+exchange.getHttpContext().getPath());
         System.out.println(exchange.getRequestBody());
+        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,response.length);
 
         OutputStream responseMessage=exchange.getResponseBody();
-        byte[] response="Hello World".getBytes();
-        exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,response.length);
+
         responseMessage.write(response);
         responseMessage.close();
         exchange.close();
