@@ -36,6 +36,8 @@ public class PersonalAssistantGateway{
         }
         while(true){
             try {
+                LOGGER.info("sleeping");
+                System.out.println("sleeping");
                 Thread.sleep(20000);
             }catch(InterruptedException e){
                 Thread.currentThread().interrupt();
