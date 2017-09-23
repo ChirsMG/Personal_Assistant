@@ -14,7 +14,7 @@ public class PersonalAssistantGateway{
 
     ////
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception{
         HttpServer server;
         //listen for connection
         try {
@@ -27,20 +27,23 @@ public class PersonalAssistantGateway{
             LOGGER.info("CanonicalHostName: "+server.getAddress().getAddress().getCanonicalHostName());
             LOGGER.info("Host String : "+server.getAddress().getHostString());
             LOGGER.info("address:"+server.getAddress().getAddress().getHostAddress());
-            LOGGER.info("port: "+server.getAddress().getPort());
+            LOGGER.info("port: "+Integer.toString(server.getAddress().getPort()));
             LOGGER.info("hostName:"+server.getAddress().getHostName());
 
         }catch(Exception e){
             LOGGER.log(Level.SEVERE,"Exception: "+e.getMessage());
 
         }
-        while(true){
+        int i=0;
+        while(i<300){
             try {
                 LOGGER.info("sleeping");
                 System.out.println("sleeping");
                 Thread.sleep(20000);
+                i++;
             }catch(InterruptedException e){
                 Thread.currentThread().interrupt();
+                i=400;
             }
         }
 
