@@ -10,9 +10,7 @@ import java.util.logging.Logger;
 
 class GatewayHandler implements  HttpHandler{
     private final static Logger LOGGER = Logger.getLogger(GatewayHandler.class.getName());
-    GatewayHandler(){
-
-    }
+    
     @Override
     public void handle(HttpExchange exchange) throws IOException{
         LOGGER.info("using handler");
