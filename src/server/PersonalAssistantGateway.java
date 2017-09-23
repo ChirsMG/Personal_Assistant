@@ -20,7 +20,7 @@ public class PersonalAssistantGateway{
         try {
              server = HttpServer.create(new InetSocketAddress(8000), 0);
              server.createContext("/test", new GatewayHandler());
-            server.start();
+           server.start();
             LOGGER.info("server context created");
             LOGGER.info("CanonicalHostName: "+server.getAddress().getAddress().getCanonicalHostName());
             LOGGER.info("Host String : "+server.getAddress().getHostString());
