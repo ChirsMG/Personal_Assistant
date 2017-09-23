@@ -27,6 +27,7 @@ public class PersonalAssistantGateway{
             LOGGER.info("address:"+server.getAddress().getAddress().getHostAddress());
             LOGGER.info("port: "+server.getAddress().getPort());
             LOGGER.info("hostName:"+server.getAddress().getHostName());
+
         }catch(Exception e){
             LOGGER.log(Level.SEVERE,"Exception: "+e.getMessage());
 
