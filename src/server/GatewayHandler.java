@@ -21,5 +21,8 @@ class GatewayHandler implements  HttpHandler{
 
         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,0);
         responseMessage.write("Hello World".getBytes());
+        responseMessage.flush();
+        responseMessage.close();
+        exchange.close();
     }
 }
