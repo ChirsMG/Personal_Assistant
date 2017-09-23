@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 class GatewayHandler implements  HttpHandler{
     private final static Logger LOGGER = Logger.getLogger(GatewayHandler.class.getName());
-    public GatewayHandler(){
+    GatewayHandler(){
 
     }
     @Override
