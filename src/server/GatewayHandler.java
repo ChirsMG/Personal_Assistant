@@ -11,13 +11,14 @@ import java.util.logging.Logger;
 abstract class GatewayHandler implements  HttpHandler{
     private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGateway.class.getName());
 
-    protected abstract String handleRequest(InputStream requestBody);
+    protected abstract String handleRequest(InputStream requestBody, String method);
 
 
     @Override
     public void handle(HttpExchange exchange) throws IOException{
 
-        String response=this.handleRequest(exchange.getRequestBody());
+        LOGGER.info("requestURI:"+exchange.getRequestURI());
+        String response=this.handleRequest(exchange.getRequestBody(),exchange.getRequestMethod());
         exchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,response.getBytes().length);
 
         OutputStream responseMessage=exchange.getResponseBody();
