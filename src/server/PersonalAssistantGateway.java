@@ -1,41 +1,58 @@
 package server;
 import com.sun.net.httpserver.HttpServer;
 
+import javax.xml.ws.Endpoint;
+import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class PersonalAssistantGateway{
     //CONFIGURATION -TODO MOVE TO FILE
     private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGateway.class.getName());
+    private static final Map<String, Class<? extends GatewayHandler>> ENDPOINTS = new HashMap<String, Class<? extends GatewayHandler>>();
+    static {
+        ENDPOINTS.put("/item", ItemHandler.class);
+        ENDPOINTS.put("/list", ListHandler.class);
+        ENDPOINTS.put("/image", ImageHandler.class);
+        ENDPOINTS.put("/event", EventHandler.class);
+        ENDPOINTS.put("/task", TaskHandler.class);
+    }
 
-
-
-
-    ////
 
     public static void main(String[] args) throws Exception{
-        HttpServer server;
-        //listen for connection
-        try {
-             server = HttpServer.create(new InetSocketAddress(8000), 0);
-             server.createContext("/test", new GatewayHandler());
-             server.setExecutor(null);
-             server.start();
-            LOGGER.info("server context created");
-            System.out.println(server.toString());
-            LOGGER.info("FLAG 001");
-            LOGGER.info("CanonicalHostName: "+server.getAddress().getAddress().getCanonicalHostName());
-            LOGGER.info("Host String : "+server.getAddress().getHostString());
-           // LOGGER.info(server.toString());
-            LOGGER.info("address:"+server.getAddress().getAddress().getHostAddress());
-            LOGGER.info("port: "+Integer.toString(server.getAddress().getPort()));
-            LOGGER.info("hostName:"+server.getAddress().getHostName());
 
-        }catch(Exception e){
-            LOGGER.log(Level.SEVERE,"Exception: "+e.getMessage());
+        ENDPOINTS.forEach((key, val) -> {
+            HttpServer server;
+            GatewayHandler handler;
+            try {
+                //load gateway handler from classname
+                handler=val.newInstance();
+            }catch(Exception e){
+               LOGGER.log(Level.SEVERE,"error - handler class not found, name: " + val);
+               return;
+            }
 
-        }
+            try {
+                server = HttpServer.create(new InetSocketAddress(8000), 0);
+                server.createContext(key, handler);
+                server.setExecutor(null);
+                server.start();
+                LOGGER.info("server context created");
+                System.out.println(server.toString());
+                LOGGER.info("CanonicalHostName: " + server.getAddress().getAddress().getCanonicalHostName());
+                LOGGER.info("Host String : " + server.getAddress().getHostString());
+                LOGGER.info("address:" + server.getAddress().getAddress().getHostAddress());
+                LOGGER.info("port: " + Integer.toString(server.getAddress().getPort()));
+                LOGGER.info("hostName:" + server.getAddress().getHostName());
+
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Exception: " + e.getMessage());
+
+            }
+        });
         int i=0;
         while(i<300){
             try {
