@@ -16,7 +16,8 @@ class ItemService {
     }
 
 
-    void create(String jsonPayload){
+    void create(Item newItem){
+
 
     }
     void delete(String id){
