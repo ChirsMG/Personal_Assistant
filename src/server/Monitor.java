@@ -3,7 +3,7 @@ package server;
 import java.util.ArrayList;
 import java.util.List;
 
-class monitorClass{
+class Monitor{
     List<Process> processList;
 
     void Monitor(){

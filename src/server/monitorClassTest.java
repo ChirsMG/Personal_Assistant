@@ -6,7 +6,7 @@ import org.junit.jupiter.api.*;
 
 class monitorClassTest {
     private final String TEST_SERVICE_NAME = "";
-    MonitorSvc monitor;
+    Monitor monitor;
     @BeforeEach
     void setUp(){
         this.monitor=new Monitor();
