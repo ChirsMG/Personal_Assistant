@@ -4,7 +4,7 @@ package server;
 
 import org.junit.jupiter.api.*;
 
-class monitorClassTest {
+class MonitorTest {
     private final String TEST_SERVICE_NAME = "";
     Monitor monitor;
     @BeforeEach
