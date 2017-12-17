@@ -3,7 +3,7 @@ package server;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Item {
+public class Item extends MappableObject{
     String id;
     String name;
     String description;
