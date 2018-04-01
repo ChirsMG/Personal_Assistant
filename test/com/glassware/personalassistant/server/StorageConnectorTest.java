@@ -1,8 +1,6 @@
-package server;
+package com.glassware.personalassistant.server;
 
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.*;
 
 class StorageConnectorTest {
     @Test

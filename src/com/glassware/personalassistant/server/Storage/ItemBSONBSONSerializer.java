@@ -1,18 +1,17 @@
-package server;
+package com.glassware.personalassistant.server.Storage;
 
-import org.bson.Document;
-import org.bson.BsonValue;
+import com.glassware.personalassistant.server.Item;
 import org.bson.conversions.Bson;
 
 import java.util.Map;
 
-public class ItemSerializer extends ObjectSerializer{
+public class ItemBSONBSONSerializer extends ObjectBSONSerializer {
     String id;
     String name;
     String description;
     Map<String, Object> content;
 
-    ItemSerializer(){
+    ItemBSONBSONSerializer(){
        super();
     }
     //JSON representation
