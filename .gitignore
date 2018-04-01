@@ -80,3 +80,9 @@ $RECYCLE.BIN/
 
 *notes.*
 \.idea/workspace\.xml
+
+\.idea/
+\target
+\out
+
+Personal_Assistant\.iml
