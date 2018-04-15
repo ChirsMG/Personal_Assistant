@@ -80,7 +80,7 @@ $RECYCLE.BIN/
 
 *notes.*
 \.idea/workspace\.xml
-
+.idea
 \.idea/
 \target
 \out
