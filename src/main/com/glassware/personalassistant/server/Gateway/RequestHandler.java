@@ -1,4 +1,4 @@
-package server;
+package com.glassware.personalassistant.server.Gateway;
 
 import com.sun.net.httpserver.*;
 
@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.util.logging.Logger;
 
-abstract class GatewayHandler implements  HttpHandler{
+abstract class RequestHandler implements  HttpHandler{
     private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGateway.class.getName());
 
     protected abstract String handleRequest(InputStream requestBody, String method);

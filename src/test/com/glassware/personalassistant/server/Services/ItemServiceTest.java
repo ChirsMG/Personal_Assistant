@@ -1,4 +1,4 @@
-package com.glassware.personalassistant.server;
+package com.glassware.personalassistant.server.Services;
 
 import org.junit.jupiter.api.Test;
 

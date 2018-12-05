@@ -1,8 +1,6 @@
-package server;
+package com.glassware.personalassistant.server.Gateway;
 import com.sun.net.httpserver.HttpServer;
 
-import javax.xml.ws.Endpoint;
-import java.lang.reflect.Constructor;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +10,7 @@ import java.util.logging.Logger;
 public class PersonalAssistantGateway{
     //CONFIGURATION -TODO MOVE TO FILE
     private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGateway.class.getName());
-    private static final Map<String, Class<? extends GatewayHandler>> ENDPOINTS = new HashMap<String, Class<? extends GatewayHandler>>();
+    private static final Map<String, Class<? extends RequestHandler>> ENDPOINTS = new HashMap<String, Class<? extends RequestHandler>>();
     static {
         ENDPOINTS.put("/item", ItemHandler.class);
         ENDPOINTS.put("/list", ListHandler.class);
@@ -26,7 +24,7 @@ public class PersonalAssistantGateway{
 
         ENDPOINTS.forEach((key, val) -> {
             HttpServer server;
-            GatewayHandler handler;
+            RequestHandler handler;
             try {
                 //load gateway handler from classname
                 handler=val.newInstance();
@@ -70,8 +68,8 @@ public class PersonalAssistantGateway{
 
 
 
-    void listen()
-    {
+//    void listen()
+//    {
 
 
 
@@ -113,5 +111,5 @@ public class PersonalAssistantGateway{
 //                }
 //            }
 //        }
-    }
+//    }
 }

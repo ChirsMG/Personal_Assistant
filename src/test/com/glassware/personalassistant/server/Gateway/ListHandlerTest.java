@@ -1,12 +1,14 @@
-package server;
+package com.glassware.personalassistant.server.Gateway;
 
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskHandlerTest {
+class ListHandlerTest {
     @Test
     void handleRequest() {
+        assert false;
+
     }
 
 }

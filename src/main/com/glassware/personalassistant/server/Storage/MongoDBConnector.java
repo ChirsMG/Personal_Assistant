@@ -1,4 +1,4 @@
-package server;
+package com.glassware.personalassistant.server.Storage;
 
 import com.mongodb.Block;
 import com.mongodb.MongoClient;
@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 
-public class MongoDBConnector implements StorageConnector {
-    private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGateway.class.getName());
+public class MongoDBConnector implements StorageConnector<MongoDBConnector> {
+    private final static Logger LOGGER = Logger.getLogger(MongoDBConnector.class.getName());
 
 
     private MongoClient client;
@@ -34,10 +34,16 @@ public class MongoDBConnector implements StorageConnector {
         this.database = client.getDatabase(this.storageName);
     }
 
-    public void storageName(String name) {
+    public MongoDBConnector storageName(String name) {
         this.storageName = name;
-
+        return this;
     }
+
+    //TODO - BAD PATTERN
+    public MongoDBConnector initialize(){
+        return this;
+    }
+
 
     /**
      * creates collection if it does not exist

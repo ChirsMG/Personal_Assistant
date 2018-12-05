@@ -1,8 +1,8 @@
-package server;
+package com.glassware.personalassistant.server.Gateway;
 
 import java.io.InputStream;
 
-public class ImageHandler extends GatewayHandler {
+public class ImageHandler extends RequestHandler {
 
     @Override
     protected String handleRequest(InputStream requestInput, String method){

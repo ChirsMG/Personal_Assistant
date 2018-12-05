@@ -1,8 +1,8 @@
-package server;
+package com.glassware.personalassistant.server.Gateway;
 
 import java.io.InputStream;
 
-public class TaskHandler extends GatewayHandler {
+public class EventHandler extends RequestHandler {
 
     @Override
     protected String handleRequest(InputStream body, String method){
@@ -14,7 +14,7 @@ public class TaskHandler extends GatewayHandler {
          * DELETE - delete
          */
 
-        return "event request recievedwith method: "+method;
+        return "Event request recieved with method: "+method;
 
     }
 }
