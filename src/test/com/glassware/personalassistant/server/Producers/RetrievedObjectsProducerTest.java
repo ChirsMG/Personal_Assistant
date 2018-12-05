@@ -4,11 +4,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class InstructionProducerTest {
+public class RetrievedObjectsProducerTest {
+
     @Test
-    public void runProducer() throws Exception {
+    public void runProducer() {
         assert false;
     }
-
-
 }

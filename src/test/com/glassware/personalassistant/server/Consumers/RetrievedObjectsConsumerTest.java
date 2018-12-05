@@ -4,11 +4,9 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ItemInstructionConsumerTest {
+public class RetrievedObjectsConsumerTest {
 
     @Test
-    public void runConsumer(){
-        assert false;
+    public void runConsumers() {
     }
-
 }

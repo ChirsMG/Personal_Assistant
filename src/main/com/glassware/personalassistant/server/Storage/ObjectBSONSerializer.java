@@ -12,7 +12,7 @@ abstract public class ObjectBSONSerializer {
 
 
     void mapObject(MappableObject object){
-        document.put("_id",object.id);
+        document.put("id",object.id);
     }
 
 }

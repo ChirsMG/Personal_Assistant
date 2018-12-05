@@ -1,11 +1,12 @@
 package com.glassware.personalassistant.server;
 
+import java.util.List;
 import java.util.Map;
 
-interface StorageConnector {
+public interface StorageConnector<T> {
 
-    Object read(String query);
-    boolean write(Map<String,Object> item);
+    List<String> read(String query);
+    boolean write(Object item);
     boolean delete(String query);
-    void storageName(String name);
+    T storageName(String name);
 }
