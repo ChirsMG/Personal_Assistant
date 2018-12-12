@@ -8,7 +8,7 @@ public class ServiceTask {
     private String taskID;
     private String taskPayload;
 
-    ServiceTask (String name){
+    public ServiceTask (String name){
         this.taskName = name;
         this.taskID=UUID.randomUUID().toString();
     }

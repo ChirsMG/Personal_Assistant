@@ -1,0 +1,41 @@
+.card{
+    background-color: #ffffff;
+    max-width: 400px;
+    min-height: 300px;
+    border-radius: 5px;
+    padding:2px;
+    box-shadow:-3px -3px 10px 0 #AAAAAA; 
+}
+
+.cardCol1{
+    width:100%;
+}
+.cardCol2{
+    columns: 2;
+    width:50%;
+    display:block;
+    float:left;
+}
+.cardCol3{
+    width:33.333%;
+    display:block;
+    float:left;
+}.cardCol4{
+    width:25%
+}.cardCol5{
+
+}.cardCol6{
+
+}
+
+.cardBlock{
+    margin:15px;
+    padding:5px;
+}
+
+.cardShadow{
+    background-color: #66666666;
+    max-width: 400px;
+    min-height: 300px;
+    border-radius: 5px;
+}

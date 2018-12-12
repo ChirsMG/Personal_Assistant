@@ -1,0 +1,93 @@
+/*Personal assistant main style sheet*/
+body{
+	background-color: #F0F0F0;
+}
+
+/* general style classes*/
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+
+
+
+/* add item style*/
+.new_item{
+	background-color: #FFFFFF;
+	margin:auto;
+	width:80ex;
+	display: block;
+	z-index:-1;
+}
+
+.title_input{
+	font-size:16px;
+	font-weight: 600;
+	border:none;
+	width:70ex;
+	margin:auto;
+	padding:8px;
+	display: block;
+}
+
+.content_input{
+	color: #909090;
+	padding: 8px;
+	border:none;
+	width:80ex;
+	margin:auto;
+	margin-top:5px;
+	min-height: 8em;
+	max-height: 25em;
+	resize:none;
+	display: block;
+}
+
+.item_input{
+	margin:auto;
+	min-width: 300px;
+
+}
+
+.BottomBar{
+	background-color: #FFFFFF;
+	width:80ex;
+	margin:auto;
+}
+
+/* Card and Gallery info */
+.Card_display{
+	margin-top:25px; 
+}
+
+.Card{ padding: 5px;
+	background-color: #FFFFFF;
+	min-width: 30ex;
+	width: 15%;
+	min-height: 15em;
+	display:inline-block;
+	margin: 10px;
+	vertical-align: top;
+}
+
+.item_title{
+	display: block;
+	max-width: 25ex;
+	font-weight: 600;
+	font-size: 18;
+	margin:auto;
+}
+
+.item_description{
+	margin:2px;
+	padding:4px;
+}
+
+.deleteBtn{
+	display: inline;
+	width:2ex;
+	height: 2em;
+	float:right;
+}

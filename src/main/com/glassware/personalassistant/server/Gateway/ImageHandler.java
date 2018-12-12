@@ -5,7 +5,7 @@ import java.io.InputStream;
 public class ImageHandler extends RequestHandler {
 
     @Override
-    protected String handleRequest(InputStream requestInput, String method){
+    protected String handleRequest(String requestInput, String method){
         /**
          * will need to handle
          * GET - read

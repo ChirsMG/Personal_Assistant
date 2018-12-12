@@ -4,20 +4,15 @@ import com.glassware.personalassistant.server.InstructionStatus;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class InstructionStatusConsumer  extends Consumable<InstructionStatus>{
-    public Map<String,InstructionStatus> recordsOut;
 
 
-    public InstructionStatusConsumer(Map<String,InstructionStatus> storageLocation) {
-        recordsOut = storageLocation;
-    }
-
-
-    public void runConsumers(String topic) throws InterruptedException {
+    public Map<String,InstructionStatus> runConsumers(String topic) throws InterruptedException {
         Consumer<Long, InstructionStatus> consumer = createConsumer(topic);
-
+        Map recordsOut=new HashMap<>();
         while (true) {
             final ConsumerRecords<Long, InstructionStatus> consumerRecords = consumer.poll(100);
 
@@ -32,6 +27,7 @@ public class InstructionStatusConsumer  extends Consumable<InstructionStatus>{
         }
         consumer.close();
         System.out.println("DONE");
+        return recordsOut;
     }
 
 }

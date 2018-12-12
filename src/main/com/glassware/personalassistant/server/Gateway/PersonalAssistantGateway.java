@@ -1,4 +1,5 @@
 package com.glassware.personalassistant.server.Gateway;
+
 import com.sun.net.httpserver.HttpServer;
 
 import java.net.InetSocketAddress;
@@ -7,10 +8,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PersonalAssistantGateway{
+public class PersonalAssistantGateway {
     //CONFIGURATION -TODO MOVE TO FILE
     private final static Logger LOGGER = Logger.getLogger(PersonalAssistantGateway.class.getName());
     private static final Map<String, Class<? extends RequestHandler>> ENDPOINTS = new HashMap<String, Class<? extends RequestHandler>>();
+
     static {
         ENDPOINTS.put("/item", ItemHandler.class);
         ENDPOINTS.put("/list", ListHandler.class);
@@ -19,25 +21,34 @@ public class PersonalAssistantGateway{
         ENDPOINTS.put("/task", TaskHandler.class);
     }
 
+    boolean exit = false;
 
-    public static void main(String[] args) throws Exception{
 
-        ENDPOINTS.forEach((key, val) -> {
-            HttpServer server;
+    public static void main(String[] args) throws InterruptedException {
+        HttpServer server;
+        try {
+            server = HttpServer.create(new InetSocketAddress(8000 ), 0); //todo
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Error creating server ");
+            LOGGER.log(Level.SEVERE, "Exception: " + e.getMessage());
+            return;
+
+        }
+        for (String endpoint : ENDPOINTS.keySet()) {
+
             RequestHandler handler;
             try {
                 //load gateway handler from classname
-                handler=val.newInstance();
-            }catch(Exception e){
-               LOGGER.log(Level.SEVERE,"error - handler class not found, name: " + val);
-               return;
+                handler = ENDPOINTS.get(endpoint).newInstance();
+            } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "error - handler class not found, name: " + ENDPOINTS.get(endpoint));
+                return;
             }
 
             try {
-                server = HttpServer.create(new InetSocketAddress(8000), 0);
-                server.createContext(key, handler);
-                server.setExecutor(null);
-                server.start();
+                server.createContext(endpoint, handler);
+                server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+
                 LOGGER.info("server context created");
                 System.out.println(server.toString());
                 LOGGER.info("CanonicalHostName: " + server.getAddress().getAddress().getCanonicalHostName());
@@ -47,30 +58,33 @@ public class PersonalAssistantGateway{
                 LOGGER.info("hostName:" + server.getAddress().getHostName());
 
             } catch (Exception e) {
+                LOGGER.log(Level.SEVERE, "Error creating server for " + endpoint);
                 LOGGER.log(Level.SEVERE, "Exception: " + e.getMessage());
 
             }
-        });
-        int i=0;
-        while(i<300){
+        }
+        server.start();
+        int i = 0;
+        while (i < 300) {
             try {
-                LOGGER.info("sleeping");
-                System.out.println("sleeping");
-                Thread.sleep(20000);
+//                LOGGER.info("sleeping");
+//                System.out.println("sleeping");
+                Thread.sleep(200);
                 i++;
-            }catch(InterruptedException e){
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                i=400;
+                i = 400;
             }
         }
 
     }
 
-
+    public void stop() {
+        exit = true;
+    }
 
 //    void listen()
 //    {
-
 
 
 //        ServerSocket server = new Server  public static void main(String[] args) throws Exception

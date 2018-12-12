@@ -9,20 +9,20 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InstructionConsumer<T> extends Consumable<Instruction<T>> {
-    public Map<String,Instruction<T>> recordsOut;
 
 
     public InstructionConsumer(Map storageLocation) {
-        recordsOut = storageLocation;
+
     }
 
 
-    public void runConsumers(String topic) throws InterruptedException {
+    public Map<String,T> runConsumers(String topic) throws InterruptedException {
         Consumer<Long, Instruction<T>> consumer = createConsumer(topic);
-
+        Map recordsOut=new HashMap();
         while (true) {
             final ConsumerRecords<Long, Instruction<T>> consumerRecords = consumer.poll(100);
 
@@ -37,6 +37,7 @@ public class InstructionConsumer<T> extends Consumable<Instruction<T>> {
         }
         consumer.close();
         System.out.println("DONE");
+        return recordsOut;
     }
 }
 
